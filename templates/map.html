@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Map User{% endblock %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"></script>
+
+<div class="page-header">
+	<div class="topnav">
+    <div class="topnav-right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'logout' %}">Log out ({{ user }})</a>
+    </div>
+  </div>
+<h2>Map Manager</h2>
+</div>
+
+<form name='map_emp' onsubmit="return MapEmployee()" method="POST">
+	{% csrf_token %}
+
+<p>Manager:<select class="js-example-basic-single" name='manager'>
+	{% for mng in mngs %}
+		<option>{{ mng.name }}</option>
+	{% endfor %}
+</select></p>
+<p>Employee:<select class="js-example-basic-multiple" name='employee' multiple="multiple">
+	<optgroup label="New Employees">
+		{% for i in new %}
+		<option>{{ i }}</option>
+		{% endfor %}
+	</optgroup>
+	{% for key, value in mng_dict.items %}
+	<optgroup label="{{ key.name }}">
+		{% for i in value %}
+		<option>{{ i }}</option>
+		{% endfor %}
+	</optgroup>
+	{% endfor %}
+</select></p>
+<p><input type='submit' value="Submit"/></p>
+</form>
+<script>
+	$(document).ready(function() {
+    $('.js-example-basic-single').select2();
+}); </script>
+
+<script>
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+});	
+</script>
+
+<script> 
+function MapEmployee()                                    
+{ 
+    var Manager = document.forms["map_emp"]["manager"];               
+    var Employee = document.forms["map_emp"]["employee"];    
+
+    if (Employee.value == [] )                                  
+    { 
+        window.alert("No employees assigned to manager"); 
+        Employee.focus(); 
+        return false; 
+    } 
+    return true; 
+}
+
+</script> 
+
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Pending Requests{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+	<div class="topnav">
+    <div class="topnav-right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'logout' %}">Log out ({{ user }})</a>
+    </div>
+  </div>
+ <h3>Pending Requests</h3>
+</div>
+
+	{% if new_mng == True %}
+		<h4><strong>No employees assigned</strong></h4>
+	{% else %}
+	<form method='POST'>{% csrf_token %}
+	<table class="table">
+		 <thead class="thead-light">
+			<tr>
+				<th>Name</th>
+				<th>From</th>
+				<th>To</th>
+				<th>Leave Type</th>
+				<th>Reason</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		{% for i in requests %}
+			{% if i.user.name in emp_list and i.Status == None %}
+			<tbody>
+			<tr>	
+					<td>{{ i.user.name }}</td>
+					<td>{{ i.From }}</td>
+					<td>{{ i.To }}</td>
+					<td>{{ i.LeaveType }}</td>
+					<td>{{ i.Reason }}</td>
+					<td><input type="radio" name={{ i.id }} value="True">Approve<br>
+						<input type="radio" name={{ i.id }} value="False">Reject
+						</td>
+			</tr>
+		</tbody>
+			{% endif %}
+		{% endfor %}
+	</table>
+	<input type="submit" value="Submit">
+	</form>
+{% endif %}
+{% endblock %}

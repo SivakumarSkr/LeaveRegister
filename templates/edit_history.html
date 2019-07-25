@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Leave History{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+	<div class="topnav">
+    <div class="topnav-right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'logout' %}">Log out ({{ user }})</a>
+    </div>
+  </div>
+ <h3>Leave History</h3>
+</div>
+
+
+	<form method='POST'>{% csrf_token %}
+	<table class="table">
+		 <thead class="thead-light">
+			<tr>
+				<th>From</th>
+				<th>To</th>
+				<th>Leave Type</th>
+				<th>Reason</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		{% for i in requests %}
+			{% if i.Status != None %}
+			<tbody>
+			<tr>	
+					<td>{{ i.From }}</td>
+					<td>{{ i.To }}</td>
+					<td>{{ i.LeaveType }}</td>
+					<td>{{ i.Reason }}</td>
+					<td>{% if i.Status == True %}
+						Approved
+						{% else %}
+						Rejected
+						{% endif %}
+						<br><input type="radio" name={{ i.id }} value="True">Approve
+						<input type="radio" name={{ i.id }} value="False">Reject</td>
+			</tr>
+			</tbody>
+			{% endif %}
+		{% endfor %}
+	</table>
+	<input type="submit" value="Save Changes">
+	</form>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Leave History{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+	<div class="topnav">
+    <div class="topnav-right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'logout'  %}">Log out ({{ user }})</a>
+    </div>
+  </div>
+ <h3>My History</h3>
+</div>
+
+{% if user_history == False %}
+		<h4>No Leave History</h4>
+{% else %}
+<table class="table">
+	<thead class="thead-light">
+	<tr>
+		<th>From</th>
+		<th>To</th>
+		<th>Leave Type</th>
+		<th>Reason</th>
+		{% if super_mng != True %}
+		<th>Status</th>
+		{% endif %}
+	</tr>
+	</thead>
+	<tbody>
+	{% for i in user_history %}
+	<tr>
+		<td>{{ i.From }}</td>
+		<td>{{ i.To }}</td>
+		<td>{{ i.LeaveType }}</td>
+		<td>{{ i.Reason }}</td>
+		{% if super_mng != True %}
+		<td>{% if i.Status == None %}
+				Pending
+				<form method="POST">{% csrf_token %}
+				<button name="{{ i.id }}">Cancel</button></form>
+			{% elif i.Status == True %}
+				Approved
+			{% else %}
+				Rejected
+			{% endif %}</td>
+			{% endif %}
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+
+<!-- <script type="text/javascript">
+	 $(document).ready(function() { 
+            $("button").click(function() { 
+                $.post("user_history", { 
+                    id: "id", 
+                }, 
+                  
+                function(data,status) { 
+                    document.getElementById("id").innerHTML 
+                            = data;  
+                }); 
+            }); 
+        }); 
+</script>
+ -->
+{% endblock %}

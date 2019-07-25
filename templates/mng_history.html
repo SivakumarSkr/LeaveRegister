@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Leave History{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+	<div class="topnav">
+	<div class="topnav-right">
+  	<a href="{% url 'home' %}">Home</a>
+  	<a href="{% url 'logout'  %}">Log out ({{ user }})</a>
+  	</div>
+ </div>
+
+ <h3>Leave History</h3>
+</div>
+<nav class='nav flex-column'>
+<a class="nav-link active" href="{% url 'pending' %}">Pending Requests</a>
+<a class="nav-link active" href="{% url 'team_history' %}">Team History</a>
+<a class="nav-link active" href="{% url 'user_history' %}">My History</a></p>
+</nav>
+{% endblock %}
