@@ -21,7 +21,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'is_active', 'department_name', 'groups', 'is_superuser')
-    exclude = ('password', 'user_permissions')
+    exclude = ('user_permissions', )
     readonly_fields = ('last_login',)
 
 

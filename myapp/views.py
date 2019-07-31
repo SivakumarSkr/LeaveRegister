@@ -33,6 +33,8 @@ class LeaveList(ListView):
     def get_queryset(self):
         return self.request.user.get_leave_request()
 
+
+
 # Create your views here.
 # @user_passes_test(lambda u: u.is_superuser)
 # def add_user(request):

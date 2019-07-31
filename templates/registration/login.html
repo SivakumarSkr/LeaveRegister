@@ -1,17 +1,18 @@
 <!-- templates/registration/login.html -->
-{% extends 'base.html' %}
+{% extends 'registration/base_login.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Login{% endblock %}
 
-{% block content %}
+{% block login %}
 
-<div class="container">
+
   <h2>Login</h2>
-  <form method="post">
+  <form method="post" action="">
   {% csrf_token %}
   {{ form | crispy }}
   <button class="btn btn-primary" type="submit">Login</button>
 </form>
-</div>
+    <p>If you are login into this first time, <strong><a href="{% url 'password_reset' %}">reset password</a></strong></p>
+
 
 {% endblock %}
