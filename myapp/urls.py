@@ -6,6 +6,7 @@ app_name = 'myapp'
 urlpatterns = [
 	path('leaverequest/', views.LeaveRequestCreate.as_view(), name='leaverequest'),
 	path('', views.Home.as_view(), name='home'),
+	path('leave-list', views.LeaveList.as_view(), name='leave-list')
 	# path('addUser', views.add_user, name='add_user'),
 	# path('editUser', views.edit_user, name='edit_user'),
 	# path('edituser', views.edit_user_1, name='edit_user_1'),

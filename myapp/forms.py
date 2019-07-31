@@ -1,14 +1,18 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import LeaveRequest
+from .models import LeaveRequest, WorkFromHome
 
 
 class LeaveRequestForm(forms.ModelForm):
     class Meta:
         model = LeaveRequest
-        fields = ('from_date', 'to_date', 'leave_type', 'reason')
+        fields = ('no_of_days', 'from_date', 'to_date', 'leave_type', 'reason')
 
 
+class WorkFromHomeForm(forms.ModelForm):
+    class Meta:
+        model = WorkFromHome
+        fields = ('no_of_days', 'from_date', 'to_date', 'reason')
     # def __init__(self, *args, **kwargs):
     # 	super(AddUserForm, self).__init__(*args, **kwargs)
     # 	self.fields['middle_name'].required = False

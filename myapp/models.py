@@ -2,12 +2,14 @@ import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.mail import send_mail
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, Group
 from django.conf import settings
 
 # Create your models here.
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Department(models.Model):
@@ -60,12 +62,12 @@ class UserManager(BaseUserManager):
         return user
 
 
-
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('email address', unique=True)
     first_name = models.CharField('first name', max_length=20)
     middle_name = models.CharField('middle name', max_length=20, blank=True)
     last_name = models.CharField('last name', max_length=20, blank=True)
+    contact_number = PhoneNumberField()
     image = models.ImageField(upload_to='avatars/', null=True, blank=True)
     groups = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, verbose_name='Employee Type')
     is_active = models.BooleanField(default=True)
@@ -91,29 +93,69 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.get_full_name()
 
     def get_leave_request(self):
-        return self.leaverequests.all()
+        return self.leaverequest_set.all()
 
-    def get_approved_leaves(self):
-        return self.leaverequests.filter(is_approved=True)
+    def get_wfh_leaves(self):
+        return self.workfromhome_set.set()
 
     @property
     def is_manager(self):
         return 'Manager' == self.groups.name
 
 
-class LeaveRequest(models.Model):
+class AnnualLeaveDetails(models.Model):
+
+    TOTAL_CASUAL_LEAVES = 12
+    TOTAL_SICK_LEAVES = 12
+
+    employee = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    year = models.PositiveIntegerField('Year', validators=[MaxValueValidator(2012), MinValueValidator(2050)])
+    total_casual_leaves = models.PositiveSmallIntegerField(default=TOTAL_CASUAL_LEAVES)
+    total_sick_leaves = models.PositiveSmallIntegerField(default=TOTAL_SICK_LEAVES)
+    casual_leaves_used = models.PositiveSmallIntegerField(default=0)
+    sick_leaves_used = models.PositiveSmallIntegerField(default=0)
+    number_of_wfh_used = models.PositiveSmallIntegerField(default=0)
+
+    def plus_sick_leave(self, number):
+        self.sick_leaves_used += number
+        self.save()
+
+    def plus_casual_leave(self, number):
+        self.casual_leaves_used += number
+        self.save()
+
+    def plus_work_from_home(self, number):
+        self.number_of_wfh_used += number
+        self.save()
+
+
+class Type(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    requested_date = models.DateField(auto_created=True)
+    no_of_days = models.PositiveSmallIntegerField(default=1)
+    from_date = models.DateField('From Date')
+    to_date = models.DateField('To date')
+    reason = models.TextField('Reason', max_length=500)
+    is_approved = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
+    def approve(self):
+        self.is_approved = True
+        self.save()
+
+
+class LeaveRequest(Type):
     CASUAL = 'C'
     SICK = 'S'
-    OTHER = 'O'
     LEAVE_TYPE = (
         (CASUAL, 'Casual'),
         (SICK, 'Sick'),
-        (OTHER, 'Other')
     )
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='leaverequests')
-    requested_date = models.DateField(auto_created=True)
-    from_date = models.DateField('From Date')
-    to_date = models.DateField('To date')
-    leave_type = models.CharField('Leave Type', max_length=10, choices=LEAVE_TYPE)
-    reason = models.TextField('Reason', max_length=500)
-    is_approved = models.BooleanField(default=False)
+    leave_type = models.CharField('Leave Type', max_length=1, choices=LEAVE_TYPE)
+
+
+class WorkFromHome(Type):
+    pass
