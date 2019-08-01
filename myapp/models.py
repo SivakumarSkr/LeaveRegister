@@ -128,6 +128,10 @@ class AnnualLeaveDetails(models.Model):
         self.number_of_wfh_used += number
         self.save()
 
+    # def save(self, *args, **kwargs):
+    #     if self.total_casual_leaves >= self.casual_leaves_used and self.total_sick_leaves >= self.sick_leaves_used:
+    #         super(AnnualLeaveDetails, self).save(*args, **kwargs)
+
 
 class Type(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
