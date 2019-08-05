@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+<!--{% load crispy_forms_tags %}-->
+{% load bootstrap %}
 {% block css_styles %}
 
 {% endblock %}
@@ -8,7 +9,7 @@
 <div class="container">
     <form method="POST">
     {% csrf_token %}
-    {{ form | crispy }}
+    {{ form | bootstrap }}
     <button class='btn btn-primary' type="submit">submit</button>
 </form>
 </div>

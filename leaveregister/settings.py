@@ -48,6 +48,8 @@ THIRD_PARTY_APP = [
     'django_extensions',
     'crispy_forms',
     'phonenumber_field',
+    'bootstrap_datepicker',
+    'bootstrapform',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + THIRD_PARTY_APP
@@ -127,7 +129,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

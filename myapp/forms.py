@@ -7,12 +7,26 @@ class LeaveRequestForm(forms.ModelForm):
     class Meta:
         model = LeaveRequest
         fields = ('no_of_days', 'from_date', 'to_date', 'leave_type', 'reason')
+        widgets = {'from_date': forms.TextInput(
+            attrs={'type': 'date'}
+        ),
+            'to_date': forms.TextInput(
+                attrs={'type': 'date'}
+            ),
+        }
 
 
 class WorkFromHomeForm(forms.ModelForm):
     class Meta:
         model = WorkFromHome
         fields = ('no_of_days', 'from_date', 'to_date', 'reason')
+        widgets = {'from_date': forms.TextInput(
+            attrs={'type': 'date'}
+        ),
+            'to_date': forms.TextInput(
+                attrs={'type': 'date'}
+            ),
+        }
     # def __init__(self, *args, **kwargs):
     # 	super(AddUserForm, self).__init__(*args, **kwargs)
     # 	self.fields['middle_name'].required = False

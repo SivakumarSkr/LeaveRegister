@@ -1,10 +1,12 @@
 from django.contrib import admin
 from django.forms import ModelForm
 from django.conf import settings
-from .models import UserProfile, Department, LeaveRequest
+from .models import UserProfile, Department, LeaveRequest, AnnualLeaveDetail, WorkFromHome
 
 
 # Register your models here.
+admin.site.register(AnnualLeaveDetail)
+
 
 class DepartmentForm(ModelForm):
     def __init__(self, *args, **kwargs):

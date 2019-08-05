@@ -21,7 +21,10 @@
       <li class="active"><a href="{% url 'myapp:home' %}">Home</a></li>
       <li><a href="{% url 'myapp:leaverequest' %}">Apply for leave</a></li>
       <li><a href="{% url 'myapp:leave-list' %}">My requests</a></li>
-      <li><a href="#">Page 3</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'myapp:profile' user.pk %}">Profile</a></li>
+      {% endif %}
+        <li><a href="{% url 'myapp:wfh_create' %}">Work from home</a></li>
     </ul>
       <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
@@ -32,7 +35,17 @@
       </ul>
   </div>
 </nav>
-
+<div class="container message">
+		{% if messages %}
+			<ul>
+				{% for message in messages %}
+				<li><div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+				<strong>{{ message.tags }}!</strong> {{ message }}
+				</div></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
 
 {% block content %}
 

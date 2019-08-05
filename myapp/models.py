@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -10,6 +11,11 @@ from django.conf import settings
 
 # Create your models here.
 from phonenumber_field.modelfields import PhoneNumberField
+
+
+def current_year():
+    # return int(datetime.datetime.now().year)
+    return 2018
 
 
 class Department(models.Model):
@@ -74,6 +80,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=True)
     department_name = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='users', null=True,
                                         blank=True)
+    designation = models.CharField(max_length=40)
     objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -96,25 +103,34 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.leaverequest_set.all()
 
     def get_wfh_leaves(self):
-        return self.workfromhome_set.set()
+        return self.workfromhome_set.all()
 
     @property
     def is_manager(self):
         return 'Manager' == self.groups.name
 
+    def current_year_detail(self):
+        latest = self.annual_leaves.filter(year=current_year())
+        if latest.count() == 0:
+            return False
+        elif latest.count() == 1:
+            return latest.latest()
 
-class AnnualLeaveDetails(models.Model):
 
+class AnnualLeaveDetail(models.Model):
     TOTAL_CASUAL_LEAVES = 12
     TOTAL_SICK_LEAVES = 12
-
-    employee = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='annual_leaves')
+    date = models.DateField(default=datetime.datetime.now)
     year = models.PositiveIntegerField('Year', validators=[MaxValueValidator(2012), MinValueValidator(2050)])
     total_casual_leaves = models.PositiveSmallIntegerField(default=TOTAL_CASUAL_LEAVES)
     total_sick_leaves = models.PositiveSmallIntegerField(default=TOTAL_SICK_LEAVES)
     casual_leaves_used = models.PositiveSmallIntegerField(default=0)
     sick_leaves_used = models.PositiveSmallIntegerField(default=0)
     number_of_wfh_used = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        get_latest_by = 'date'
 
     def plus_sick_leave(self, number):
         self.sick_leaves_used += number
@@ -135,8 +151,9 @@ class AnnualLeaveDetails(models.Model):
 
 class Type(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
+    annual_leave = models.ForeignKey(AnnualLeaveDetail, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    requested_date = models.DateField(auto_created=True)
+    requested_date = models.DateField(default=datetime.datetime.now)
     no_of_days = models.PositiveSmallIntegerField(default=1)
     from_date = models.DateField('From Date')
     to_date = models.DateField('To date')
@@ -149,6 +166,9 @@ class Type(models.Model):
     def approve(self):
         self.is_approved = True
         self.save()
+
+    def __str__(self):
+        return self.user.get_full_name() + '- ' + str(self.requested_date)
 
 
 class LeaveRequest(Type):

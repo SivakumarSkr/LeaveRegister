@@ -1,10 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>{{ request.user.get_short_name }}'s Profile</title>{% endblock %}
+{% block header %}
+<!--<link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">-->
+<!--<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">-->
+<!--<link rel="stylesheet" type="text/css" href="{% static 'styles/profile.css' %}">-->
+{% endblock %}
+{% block content %}
 
-</body>
-</html>
+<div class="container emp-profile">
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="profile-img">
+                            <img src="{{ profile.avatar.url }}" class='img-rounded' alt=""/>
+                            <!--<div class="file btn btn-lg btn-primary">-->
+                                <!--Change Photo-->
+                                <!--<input type="file" name="file"/>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="profile-head">
+                                    <h3 style="color:black;">
+                                        {{ profile.get_full_name }}
+                                    </h3>
+                                    <h4>{% if profile.is_manager %} Manager {% endif %}</h4>
+                                    <!--<h6>-->
+                                        <!--Web Developer and Designer-->
+                                    <!--</h6>-->
+                                    <!--<p class="proile-rating">RANKINGS : <span>8/10</span></p>-->
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                                </li>
+<!--                                <li class="nav-item">-->
+<!--                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>-->
+<!--                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="profile-work">
+                            <a href="{% url 'myapp:leave-list' %}">Leave request</a>
+                            <a href="{% url 'myapp:annual_leave' %}">Previous year reports</a>
+
+<!--                            <a href="">Bootply Profile</a>-->
+<!--                            <p>SKILLS</p>-->
+<!--                            <a href="">Web Designer</a><br/>-->
+<!--                            <a href="">Web Developer</a><br/>-->
+<!--                            <a href="">WordPress</a><br/>-->
+<!--                            <a href="">WooCommerce</a><br/>-->
+<!--                            <a href="">PHP, .Net</a><br/>-->
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Email</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ profile.email }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>First Name</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ profile.first_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Last Name</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ profile.last_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Phone</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ profile.contact_number }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Department</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ profile.department_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Designation</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ profile.designation }}</p>
+                                            </div>
+                                        </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Experience</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>Expert</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Hourly Rate</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>10$/hr</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Total Projects</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>230</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>English Level</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>Expert</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Availability</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>6 months</p>
+                                            </div>
+                                        </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Your Bio</label><br/>
+                                        <p>Your detail description</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                                {% if current_details %}
+                                <div class="container">
+                                    <table class="table">
+                                        <tr>
+                                            <td>Total Casual leaves</td>
+                                            <td>{{ current_details.total_casual_leaves }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Sick leaves</td>
+                                            <td>{{ current_details.total_sick_leaves }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Casual leaves used</td>
+                                            <td>{{ current_details.casual_leaves_used }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sick leaves used</td>
+                                            <td>{{ current_details.sick_leaves_used }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total work from home used</td>
+                                            <td>{{ current_details.number_of_wfh_used }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                {% else %}
+                                    <a href="{% url 'myapp:active_leave' %}">Activate report</a>
+                                {% endif %}
+                            </div>
+            </form>
+        </div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block scripts %}
+<!--<script src="{% static 'plugins/easing/easing.js' %}"></script>-->
+<!--<script src="{% static 'plugins/parallax-js-master/parallax.min.js' %}"></script>-->
+{% endblock %}
