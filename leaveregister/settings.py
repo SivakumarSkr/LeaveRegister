@@ -54,12 +54,14 @@ THIRD_PARTY_APP = [
     'phonenumber_field',
     'bootstrap_datepicker',
     'bootstrapform',
+    'soet',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + THIRD_PARTY_APP
 
 
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,6 +69,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'myapp.middleware.StackOverFlowException',
+    # 'soet.middleware.StackOverflowMiddleware',
 ]
 
 ROOT_URLCONF = 'leaveregister.urls'
