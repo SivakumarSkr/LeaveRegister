@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.shortcuts import redirect
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -33,7 +35,7 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'myapp.UserProfile'
 
 LOCAL_APPS = [
-    'myapp',
+    'myapp.apps.MyappConfig',
 ]
 DEFAULT_APPS = [
     'django.contrib.admin',
@@ -44,6 +46,8 @@ DEFAULT_APPS = [
     'django.contrib.staticfiles',
 ]
 THIRD_PARTY_APP = [
+    'rest_framework',
+    'rest_framework.authtoken',
     'admin_honeypot',
     'django_extensions',
     'crispy_forms',
@@ -89,12 +93,24 @@ WSGI_APPLICATION = 'leaveregister.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'leaveapplication',
+        'USER': 'postgres',
+        'PASSWORD': 'zaq1@#EDS',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -136,8 +152,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
@@ -148,3 +164,15 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'siva999skr@gmail.com'
 EMAIL_HOST_PASSWORD = 'asdfvcxz'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}

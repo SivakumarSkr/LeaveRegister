@@ -15,6 +15,13 @@ class LeaveRequestForm(forms.ModelForm):
             ),
         }
 
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        if cleaned_data['from_date'] >= cleaned_data['to_date']:
+            raise forms.ValidationError('from date must be earlier than to date')
+        else:
+            return cleaned_data
+
 
 class WorkFromHomeForm(forms.ModelForm):
     class Meta:

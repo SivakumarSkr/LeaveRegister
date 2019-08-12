@@ -4,14 +4,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, ListView, DetailView, RedirectView
-
 from .models import LeaveRequest, WorkFromHome, AnnualLeaveDetail, current_year
 from django.contrib.auth.decorators import user_passes_test, login_required;
 from .forms import LeaveRequestForm, WorkFromHomeForm
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash, get_user_model
-from django.http import HttpResponse
-
+from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
+from django.contrib.auth import update_session_auth_hash, get_user_model, authenticate, login
+from django.http import HttpResponse, HttpResponseRedirect
 User = get_user_model()
 
 
@@ -34,18 +32,21 @@ class Home(TemplateView):
     template_name = 'home.html'
 
 
+class HomeForUser(TemplateView):
+    template_name = 'home2.html'
+
+
 class LeaveList(LoginRequiredMixin, ListView):
     model = LeaveRequest
-    template_name = 'leavelist.html'
-    paginate_by = 10
+    template_name = ['leavelist.html', ]
     context_object_name = 'leaves'
 
     def get_queryset(self):
-        return self.request.user.get_leave_request()
+        return self.request.user.get_leave_request().order_by('-requested_date')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         content = super(LeaveList, self).get_context_data(**kwargs)
-        content['wfhs'] = self.request.user.get_wfh_leaves()
+        content['wfhs'] = self.request.user.get_wfh_leaves().order_by('-requested_date')
         return content
 
 
@@ -100,4 +101,3 @@ class AnnualLeaveList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return self.request.user.annual_leaves.all()
-

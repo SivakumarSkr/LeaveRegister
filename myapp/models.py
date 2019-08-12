@@ -2,6 +2,7 @@ import datetime
 import uuid
 
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -14,8 +15,17 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 def current_year():
-    # return int(datetime.datetime.now().year)
-    return 2018
+    return int(datetime.datetime.now().year)
+
+
+def today():
+    return datetime.date.today()
+
+
+def validate_date(date):
+    print(date, today())
+    if date <= today():
+        raise ValidationError('Invalid date')
 
 
 class Department(models.Model):
@@ -38,7 +48,7 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
         )
 
-        user.set_password(password)
+        user.set_password('welcome@123')
         user.save(using=self._db)
         return user
 
@@ -114,7 +124,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         if latest.count() == 0:
             return False
         elif latest.count() == 1:
-            return latest.latest()
+            return latest[0]
 
 
 class AnnualLeaveDetail(models.Model):
@@ -155,8 +165,8 @@ class Type(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     requested_date = models.DateField(default=datetime.datetime.now)
     no_of_days = models.PositiveSmallIntegerField(default=1)
-    from_date = models.DateField('From Date')
-    to_date = models.DateField('To date')
+    from_date = models.DateField('From Date', validators=[validate_date])
+    to_date = models.DateField('To date', validators=[validate_date])
     reason = models.TextField('Reason', max_length=500)
     is_approved = models.BooleanField(default=False)
 
@@ -183,3 +193,4 @@ class LeaveRequest(Type):
 
 class WorkFromHome(Type):
     pass
+

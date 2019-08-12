@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Welcome to Leave application portal</h1>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="container">
+                <h4>
+                    If you are admin click here
+                </h4>
+                <a class="btn btn-primary" href="/classified">Login to admin</a>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="container">
+                <h4>
+                    If you are a normal user click here
+                </h4>
+                <a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
